@@ -4,7 +4,11 @@ const router = express.Router();
 const {USER_ROUTE_ENUMS} = require('./enums');
 const checkAuth = require("../middlewares/check-auth");
 
-const {register,login,updateUserData,createTask,editTask,completeTask,deleteTask,createSubTask} = require('../controllers/user-controller');
+const {register,login,updateUserData,createTask,editTask,completeTask,
+       deleteTask,createSubTask,createList,editList,deleteList,
+       getUserData,getSubtasks,getTasks,getLists}
+    = require('../controllers/user-controller');
+
 const {registerUserValidator} = require('../validators/user-validator');
 const {validate} = require("../validators/validate");
 
@@ -19,6 +23,16 @@ router.post(USER_ROUTE_ENUMS.UPDATE_TASK,editTask);
 router.post(USER_ROUTE_ENUMS.COMPLETE_TASK,completeTask);
 router.post(USER_ROUTE_ENUMS.DELETE_TASK,deleteTask);
 router.post(USER_ROUTE_ENUMS.CREATE_SUBTASK,createSubTask);
+router.post(USER_ROUTE_ENUMS.CREATE_LIST,createList);
+router.post(USER_ROUTE_ENUMS.EDIT_LIST,editList);
+router.post(USER_ROUTE_ENUMS.DELETE_LIST,deleteList);
+
+
+router.get(USER_ROUTE_ENUMS.USERDATA,getUserData);
+router.get(USER_ROUTE_ENUMS.SUBTASKS,getSubtasks);
+router.get(USER_ROUTE_ENUMS.TASKS,getTasks);
+router.get(USER_ROUTE_ENUMS.LISTS,getLists);
+
 module.exports =router;
 
 

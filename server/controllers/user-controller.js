@@ -194,6 +194,118 @@ const createSubTask =async (req,res)=>{
     return res.status(200).json({message:"Successfully inserted",status:"OK"})
 }
 
+const createList = async (req,res)=>{
+   const {name,description} = req.body;
+   try {
+       const user_data =await collection.findOne({ uuid: req.userData.uuid });
+       await listCollection.insertOne({name,description,user_id:user_data._id,state:3});
+   }
+   catch (e){
+       return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+   }
+    return res.status(200).json({message:"Successfully inserted",status:"OK"});
+}
+
+
+const editList = async (req,res)=>{
+    const {list_id,name,description} = req.body;
+    try {
+        const user_data =await collection.findOne({ uuid: req.userData.uuid });
+        const check_list = await listCollection.findOne({_id:new ObjectID(list_id),user_id:user_data._id});
+        if(check_list === null){
+            return res.status(422).json({message: "Invalid list_id!", status: "NOK"});
+        }
+        await listCollection.updateOne({_id: new ObjectID(list_id)},{$set:{name,description}});
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json({message:"Successfully inserted",status:"OK"});
+}
+
+
+const deleteList = async (req,res)=>{
+    const {list_id}= req.body
+    try{
+        const user_data =await collection.findOne({ uuid: req.userData.uuid });
+        const list_data = await listCollection.findOne({_id: new ObjectID(list_id),user_id:user_data._id});
+        if(list_data === null) {
+            return res.status(422).json({message: "Invalid list_id!", status: "NOK"});
+        }
+        await listCollection.updateOne({_id: new ObjectID(list_id)},{$set:{state:5}});
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json({message:"Successfully inserted",status:"OK"})
+}
+
+const getUserData = async (req,res) =>{
+    let user_data;
+    try{
+        user_data = await collection.findOne({uuid:req.userData.uuid});
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+
+    return res.status(200).json({name:user_data.name,surname: user_data.surname,email:user_data.email});
+
+}
+
+
+const getSubtasks = async (req,res)=>{
+    const{task_id} = req.body;
+    let data;
+    try{
+        const user_data =await collection.findOne({ uuid: req.userData.uuid });
+        const task_data = await taskCollection.findOne({_id: new ObjectID(task_id),user_id:user_data._id});
+        if(task_data === null) {
+            return res.status(422).json({message: "Invalid task_id!", status: "NOK"});
+        }
+         data = await subTask.find( { task_id : new ObjectID(task_id)}).toArray();
+
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+
+    return res.status(200).json(data);
+}
+
+
+const getTasks = async (req,res)=>{
+
+    let data;
+    try{
+        const user_data =await collection.findOne({ uuid: req.userData.uuid });
+
+        data = await taskCollection.find( { user_id : user_data._id}).toArray();
+
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+
+    return res.status(200).json(data);
+}
+
+const getLists = async (req,res)=>{
+
+    let data;
+    try{
+        const user_data =await collection.findOne({ uuid: req.userData.uuid });
+
+        data = await listCollection.find( { user_id : user_data._id}).toArray();
+
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+
+    return res.status(200).json(data);
+}
+
 module.exports = {
     register,
     login,
@@ -202,5 +314,13 @@ module.exports = {
     editTask,
     completeTask,
     deleteTask,
-    createSubTask
+    createSubTask,
+    createList,
+    editList,
+    deleteList,
+    getUserData,
+    getSubtasks,
+    getTasks,
+    getLists
+
 }

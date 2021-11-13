@@ -7,7 +7,14 @@ const USER_ROUTE_ENUMS={
     UPDATE_TASK:"/update-task",
     COMPLETE_TASK:"/complete-task",
     DELETE_TASK:"/delete-task",
-    CREATE_SUBTASK:"/create-subtask"
+    CREATE_SUBTASK:"/create-subtask",
+    CREATE_LIST :"/create-list",
+    EDIT_LIST :"/edit-list",
+    DELETE_LIST :"/delete-list",
+    USERDATA:"/userdata",
+    SUBTASKS:"/subtasks",
+    TASKS:"/tasks",
+    LISTS:"/lists"
 }
 
 
