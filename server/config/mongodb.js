@@ -12,6 +12,9 @@ const db = client.db(databaseName);
 const collection = db.collection('users');
 const taskCollection = db.collection('tasks');
 const subTask = db.collection("subtasks");
+const listCollection =db.collection("lists");
+
+
 
 
 
@@ -19,6 +22,7 @@ module.exports ={
     collection,
     taskCollection,
     subTask,
+    listCollection
 }
 
 

@@ -4,7 +4,7 @@ const router = express.Router();
 const {USER_ROUTE_ENUMS} = require('./enums');
 const checkAuth = require("../middlewares/check-auth");
 
-const {register,login,updateUserData,createTask} = require('../controllers/user-controller');
+const {register,login,updateUserData,createTask,editTask,completeTask,deleteTask,createSubTask} = require('../controllers/user-controller');
 const {registerUserValidator} = require('../validators/user-validator');
 const {validate} = require("../validators/validate");
 
@@ -15,7 +15,10 @@ router.use(checkAuth);
 
 router.post(USER_ROUTE_ENUMS.UPDATE_USER_DATA,updateUserData);
 router.post(USER_ROUTE_ENUMS.ADD_TASK,createTask);
-
+router.post(USER_ROUTE_ENUMS.UPDATE_TASK,editTask);
+router.post(USER_ROUTE_ENUMS.COMPLETE_TASK,completeTask);
+router.post(USER_ROUTE_ENUMS.DELETE_TASK,deleteTask);
+router.post(USER_ROUTE_ENUMS.CREATE_SUBTASK,createSubTask);
 module.exports =router;
 
 
