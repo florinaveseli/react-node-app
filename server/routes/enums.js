@@ -1,7 +1,9 @@
 const USER_ROUTE_ENUMS={
     BASE_URL:"/user",
     REGISTER:"/register",
-    LOGIN:"/login"
+    LOGIN:"/login",
+    UPDATE_USER_DATA:"/update-user-data",
+    ADD_TASK:"/add-task"
 }
 
 
