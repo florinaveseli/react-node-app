@@ -1,27 +1,33 @@
 import React from "react";
-import {BrowserRouter,Routes,Route,NavLink} from "react-router-dom";
+import {BrowserRouter ,Routes,Route,NavLink,Link} from "react-router-dom";
+
+
 import LoginRegister from "./LoginRegister";
 import Home from "./Home";
 import Tasks from "./Tasks";
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <div className="header">
-          <NavLink exact activeClassName="active" to="/">SignIn</NavLink>
-          <NavLink activeClassName="active" to="/home">Home</NavLink>
-          <NavLink activeClassName="active" to="/tasks">Tasks</NavLink>
-        </div>
-        <div className="content">
-          <Routes>
-            <Route exact path="/">{LoginRegister}</Route>
-            <Route exact path="/home">{Home}</Route>
-            <Route exact path="/tasks">{Tasks}</Route>
-          </Routes>
+    <BrowserRouter>
+        <div className="App">
+
+            <div className="header">
+              <NavLink   style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/">SignIn</NavLink>
+              <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/home">Home</NavLink>
+              <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/tasks">Tasks</NavLink>
+
+            </div>
+            <div className="content">
+              <Routes>
+                <Route exact path="/" element={<LoginRegister/>} />
+                <Route exact path="/home" element={<Home/>} />
+                <Route exact path="/tasks" element={<Tasks/>}/>
+              </Routes>
+
+            </div>
 
         </div>
-      </BrowserRouter>
-    </div>
+     </BrowserRouter>
+
   );
 }
 

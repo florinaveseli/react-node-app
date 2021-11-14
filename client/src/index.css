@@ -11,3 +11,34 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.header{
+  padding: 10px;
+  background: aliceblue;
+  border-bottom: 1px solid silver;
+}
+
+.header a{
+  color: #4d678a;
+  text-decoration: none;
+  margin-left: 20px;
+  margin-right: 5px;
+}
+
+.header a:hover{
+  color: #9abbe7;
+}
+
+.header .active{
+  color: #604a88;
+}
+
+.content{
+  padding: 20px;
+}
+
+.error{
+  color: red;
+  margin-bottom: 10px;
+}
