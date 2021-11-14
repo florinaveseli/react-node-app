@@ -5,8 +5,10 @@ import {BrowserRouter ,Routes,Route,NavLink,Link} from "react-router-dom";
 import LoginRegister from "./LoginRegister";
 import Home from "./Home";
 import Tasks from "./Tasks";
+import  Lists from "./Lists";
 import PublicRoute from "./Routes/PublicRoute";
 import PrivateRoute from "./Routes/PrivateRoute";
+
 
 function App() {
   return (
@@ -17,7 +19,7 @@ function App() {
               <NavLink   style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/">SignIn</NavLink>
               <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/home">Home</NavLink>
               <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/tasks">Tasks</NavLink>
-
+              <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/lists">Lists</NavLink>
             </div>
             <div className="content">
               <Routes>
@@ -29,6 +31,9 @@ function App() {
                   </Route>
                   <Route exact path='/tasks' element={<PrivateRoute/>}>
                       <Route exact path='/tasks' element={<Tasks/>}/>
+                  </Route>
+                  <Route exact path='/lists' element={<PrivateRoute/>}>
+                      <Route exact path='/lists' element={<Lists/>}/>
                   </Route>
               </Routes>
 
