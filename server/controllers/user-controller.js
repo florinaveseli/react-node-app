@@ -95,7 +95,7 @@ const createTask = async (req,res) =>{
        const task_data = await taskCollection.insertOne({title,description,due_date,completed:0,state:3,user_id:user_data._id});
        if(list_id !== null && list_id !== '' && list_id !== undefined){
        const list_data = await listCollection.findOne({_id: new ObjectID(list_id)});
-       await  listCollection.insertOne({name:list_data.name,description: list_data.description,task_id:task_data.insertedId,state:3});
+       await  listCollection.insertOne({name:list_data.name,description: list_data.description,task_id:task_data.insertedId,state:3,list_default:new ObjectID(list_id)});
        }
    }
    catch (e){
@@ -118,22 +118,30 @@ const editTask = async (req,res)=>{
         await taskCollection.updateOne({ "_id": new ObjectID(task_id) }, { $set: { "title":title,"description":description,"due_date":due_date } });
 
 
+    if(list_id !== null && list_id !== '' && list_id !== undefined){
 
-     const list_data = await listCollection.findOne({_id:new ObjectID(list_id),task_id : new ObjectID(task_id),state:3});
+     const list_data = await listCollection.findOne({task_id : new ObjectID(task_id),state:3,list_default:new ObjectID(list_id)});
 
      if(list_data === null){
-         const set_state_other =  await listCollection.findOne({task_id : new ObjectID(task_id),state:3});
+
+         const set_state_other =  await listCollection.findOne({task_id : new ObjectID(task_id),state:3,list_default:{$ne : new ObjectID(list_id)}});
          if(set_state_other !== null) {
-             await listCollection.updateOne({task_id : new ObjectID(task_id)},{$set:{state:5}});
+             await listCollection.updateOne({_id :set_state_other._id},{$set:{state:5}});
          }
 
          const existed_list = await listCollection.findOne({_id: new ObjectID(list_id),user_id: new ObjectID(user_data._id)});
          await listCollection.insertOne({name:existed_list.name,description:existed_list.description,task_id:new ObjectID(task_id),state:3});
 
      }
-
+        const set_state_other =  await listCollection.findOne({task_id : new ObjectID(task_id),state:3,list_default:{$ne : new ObjectID(list_id)} });
+        if(set_state_other !== null) {
+            await listCollection.updateOne({_id :  set_state_other._id},{$set:{state:3}});
+        }
+        await listCollection.updateOne({task_id : new ObjectID(task_id),list_default:  new ObjectID(list_id)},{$set:{state:3}});
+    }
     }
     catch (e){
+        console.log(e)
         return res.status(400).json({message: "Something went wrong!", status: "NOK"});
     }
  return res.status(200).json({message:"Successfully inserted",status:"OK"})
@@ -154,7 +162,7 @@ const completeTask = async (req,res)=>{
     catch (e){
         return res.status(400).json({message: "Something went wrong!", status: "NOK"});
     }
-    return res.status(200).json({message:"Successfully inserted",status:"OK"})
+    return res.status(200).json({message:"Successfully inserted",status:"OK",completed})
 }
 
 
@@ -263,7 +271,7 @@ const getSubtasks = async (req,res)=>{
         if(task_data === null) {
             return res.status(422).json({message: "Invalid task_id!", status: "NOK"});
         }
-         data = await subTask.find( { task_id : new ObjectID(task_id)}).toArray();
+         data = await subTask.find( { task_id : new ObjectID(task_id),state:3}).toArray();
 
     }
     catch (e){
@@ -280,7 +288,7 @@ const getTasks = async (req,res)=>{
     try{
         const user_data =await collection.findOne({ uuid: req.userData.uuid });
 
-        data = await taskCollection.find( { user_id : user_data._id}).sort( { _id: -1 } ).toArray();
+        data = await taskCollection.find( { user_id : user_data._id,state:3}).sort( { _id: -1 } ).toArray();
 
     }
     catch (e){
@@ -296,7 +304,7 @@ const getLists = async (req,res)=>{
     try{
         const user_data =await collection.findOne({ uuid: req.userData.uuid });
 
-        data = await listCollection.find( { user_id : user_data._id}).sort( { _id: -1 } ).toArray();
+        data = await listCollection.find( { user_id : user_data._id,state:3}).sort( { _id: -1 } ).toArray();
 
     }
     catch (e){
@@ -309,19 +317,34 @@ const getLists = async (req,res)=>{
 const getTasksId = async (req,res)=>{
 
     const {id}= req.params
-    let task_data;
+    let task_data,list_data,test;
     try{
         const user_data =await collection.findOne({ uuid: req.userData.uuid });
          task_data = await taskCollection.findOne({_id: new ObjectID(id),user_id:user_data._id});
         if(task_data === null) {
             return res.status(422).json({message: "Invalid task_id!", status: "NOK"});
         }
+        list_data = await listCollection.findOne({task_id: new ObjectID(id),state:3});
+        // test= taskCollection.aggregate(
+        //     [
+        //         {
+        //             $project: {
+        //                 yearMonthDayUTC: { $dateToString: { format: "%m-%d-%Y", date: "$date" } }}}]);
+        const date = new Date(task_data.due_date);
+        const dm= date.getMonth()     // 11
+       const dd= date.getDate()      // 29
+       const dy = date.getFullYear()  // 2011
+        test = Date.parse(dm+"/"+dd+"/"+dy);
+
 
     }
     catch (e){
         return res.status(400).json({message: "Something went wrong!", status: "NOK"});
     }
-    return res.status(200).json(task_data)
+    if(list_data ===null){
+        return res.status(200).json({task_data:task_data,_list_id:null,_list_name:null,task_date : test})
+    }
+    return res.status(200).json({task_data:task_data,list_data:list_data,task_date : test})
 }
 
 
@@ -329,9 +352,12 @@ const getListId = async (req,res)=>{
 
     const {id}= req.params
     let list_data;
+    let test;
     try{
         const user_data =await collection.findOne({ uuid: req.userData.uuid });
-         list_data = await listCollection.findOne({_id: new ObjectID(id),user_id:user_data._id});
+         list_data = await listCollection.findOne({_id: new ObjectID(id),user_id:user_data._id})
+
+
         if(list_data === null) {
             return res.status(422).json({message: "Invalid list_id!", status: "NOK"});
         }
@@ -340,8 +366,11 @@ const getListId = async (req,res)=>{
     catch (e){
         return res.status(400).json({message: "Something went wrong!", status: "NOK"});
     }
+
     return res.status(200).json(list_data)
 }
+
+
 
 
 module.exports = {

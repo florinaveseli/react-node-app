@@ -18,7 +18,12 @@ const Tasks  =()=>{
     const [list,setList]= useState([]);
     const [show,setShow]= useState(false);
 
-
+    const [taskId,setTaskId] = useState('');
+    const [taskTitleId,getTaskTitleId] =useState('');
+    const [taskDescriptionId,getTaskDescriptionId] =useState('');
+    const [taskDateId,getTaskDateId] =useState('');
+    const [taskListId,getTaskListId] =useState({});
+    const [complete,setComplete]= useState(false);
 
     useEffect(() => {
         const config = {
@@ -33,7 +38,7 @@ const Tasks  =()=>{
             const data = res.data;
             const options = data.map(d => ({"value" : d._id, "title" : d.title,"completed":d.completed,"description":d.description}))
              setTasks(options)
-             console.log(options)
+            console.log(data,"sd")
 
 
 
@@ -52,6 +57,7 @@ const Tasks  =()=>{
                 const data = res.data;
                 const options = data.map(d => ({"value" : d._id, "label" : d.name}))
                 setList(options);
+
             })
             .catch(e=>{
 
@@ -59,8 +65,8 @@ const Tasks  =()=>{
 
     }, []);
 
-    const createTask =(e)=>{
-        e.preventDefault();
+    const createTask =()=>{
+        // e.preventDefault();
         const data ={
             "title": title,
             "description": description,
@@ -69,7 +75,7 @@ const Tasks  =()=>{
         };
 
 
-        console.log(data,"data")
+
 
         var config = {
             method: 'post',
@@ -99,6 +105,148 @@ const Tasks  =()=>{
     const hideModal = () =>{
         setShow(false);
     }
+
+    const getTask = (e)=>{
+
+        const configList = {
+            method: 'get',
+            url: `http://localhost:8000/api/user/task/${e.value}`,
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            }
+        };
+        axios(configList).then(res=>{
+            const data = res.data.task_data;
+
+            getTaskTitleId(data.title);
+            getTaskDescriptionId(data.description);
+            getTaskDateId(res.data.task_date);
+            setTaskId(data._id);
+
+
+            const list_data = res.data.list_data;
+            const isObject = (value) => typeof value === "object" && value !== null
+            if(  isObject(list_data)  ){
+                const op ={"value" : list_data._id, "label" : list_data.name};
+                getTaskListId(op);
+            }
+
+
+
+        })
+            .catch(e=>{
+
+            })
+    }
+
+    const updateTasks =()=>{
+
+        const data = {
+            "title":taskTitleId,
+            "description":taskDescriptionId,
+            "task_id": taskId,
+            "list_id":id,
+            "due_date": taskDateId
+        };
+
+
+
+
+        var config = {
+            method: 'post',
+            url: 'http://localhost:8000/api/user/update-task',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            },
+            data
+        };
+
+
+        axios(config).then(data=>{
+            window.location.reload(false);
+
+        }).catch(e=>{
+            console.log(e,"eee")
+        })
+    }
+    const handleChangeId =(e)=>{
+        getTaskListId(e.value);
+    }
+    const checkTask =()=>{
+
+    }
+    const handleCheck =(e) =>{
+
+
+        let com ;
+
+        if(!complete){
+            com =1;
+        }
+        else{
+            com =0;
+        }
+        console.log(e.value)
+        const data = {
+            "task_id": e.value,
+            "completed":com
+        };
+
+
+        var config = {
+            method: 'post',
+            url: 'http://localhost:8000/api/user/complete-task',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            },
+            data
+        };
+
+
+        axios(config).then(res=>{
+            if(res.data.completed === 1){
+                setComplete(true);
+            }
+            else{
+                setComplete(false);
+            }
+             window.location.reload(false);
+
+        }).catch(e=>{
+            console.log(e,"eee")
+        })
+
+    }
+
+    const handleDelete =(e) =>{
+
+
+
+        const data = {
+            "task_id": e.value,
+        };
+
+
+        var config = {
+            method: 'post',
+            url: 'http://localhost:8000/api/user/delete-task',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            },
+            data
+        };
+
+
+        axios(config).then(res=>{
+
+            window.location.reload(false);
+
+        }).catch(e=>{
+            console.log(e,"eee")
+        })
+
+    }
+
     return(
         <div>
             <Form>
@@ -128,9 +276,10 @@ const Tasks  =()=>{
             <div className="users">
                 <p>Tasks List:</p>
                 <ul>
+
                 {tasks.map((el,user) => (
 
-                    <li className="user" key={user}><span>{el.title} </span><span> {el.description}</span><Button onClick={showModal} variant="primary">...</Button><button></button><button></button></li>
+                    <li className="user" key={user}><span>{el.title} </span><span> {el.description}</span><Button    onClick={(e) => { showModal(); getTask(el);}}   variant="primary">...</Button> <input name="cb" type="checkbox" checked={complete}  onChange={()=>handleCheck(el)} /><Button variant="danger" onClick={()=>handleDelete(el)}>X</Button></li>
                 ))}
                 </ul>
             </div>
@@ -143,20 +292,20 @@ const Tasks  =()=>{
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>Title</Form.Label>
-                            <Form.Control type="text" placeholder="Title" />
+                            <Form.Control type="text" value={taskTitleId} onChange={e=>{getTaskTitleId(e.target.value)}}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3">
                             <Form.Label>Description</Form.Label>
-                            <Form.Control type="text" placeholder="Description" />
+                            <Form.Control type="text" value={taskDescriptionId}  onChange={e=>{getTaskDescriptionId(e.target.value)}} />
                         </Form.Group>
                         <Form.Group className="mb-3" >
                             <Form.Label>Due Date</Form.Label>
-                           <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+                           <DatePicker selected={taskDateId} onChange={(date) => getTaskDateId(date)}  />
                         </Form.Group>
                         <Form.Group className="mb-3" >
                             <Form.Label>Select List</Form.Label>
-                            <Select options={list} onChange={handleChange} />
+                            <Select options={list} onChange={handleChange} defaultValue={taskListId} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -164,7 +313,7 @@ const Tasks  =()=>{
                     <Button variant="secondary" onClick={hideModal}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={hideModal}>
+                    <Button variant="primary" onClick={updateTasks}>
                         Save Changes
                     </Button>
                 </Modal.Footer>
