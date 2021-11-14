@@ -1,13 +1,12 @@
 import React from "react";
-import {Redirect, Route} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
 import {getToken} from "../Utils/SetToken";
 
-const PublicRoute = ({component: Component,...data}) =>{
+const PublicRoute = () =>{
     return(
-        <Route
-            {...data}
-            render={(props) => !getToken() ? <Component {...data} /> : <Redirect to={{ pathname: '/tasks' }} />}
-        />
+
+        !getToken() ? <Outlet  /> : <Navigate to={{ pathname: '/home'}} />
+
     )
 }
 

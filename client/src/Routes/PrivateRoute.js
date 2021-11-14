@@ -1,14 +1,13 @@
 import React from "react";
-import {Redirect, Route} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
 import {getToken} from "../Utils/SetToken";
 
-const PublicRoute = ({component: Component,...data}) =>{
+const PrivateRoute = () =>{
     return(
-        <Route
-            {...data}
-            render={(props) => getToken() ? <Component {...data} /> : <Redirect to={{ pathname: '/', state :{ from: props.location}}} />}
-        />
+
+            getToken() ? <Outlet  /> : <Navigate to={{ pathname: '/'}} />
+
     )
 }
 
-export default PublicRoute;
+export default PrivateRoute;

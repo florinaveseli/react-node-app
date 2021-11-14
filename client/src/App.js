@@ -5,6 +5,9 @@ import {BrowserRouter ,Routes,Route,NavLink,Link} from "react-router-dom";
 import LoginRegister from "./LoginRegister";
 import Home from "./Home";
 import Tasks from "./Tasks";
+import PublicRoute from "./Routes/PublicRoute";
+import PrivateRoute from "./Routes/PrivateRoute";
+
 function App() {
   return (
     <BrowserRouter>
@@ -18,9 +21,15 @@ function App() {
             </div>
             <div className="content">
               <Routes>
-                <Route exact path="/" element={<LoginRegister/>} />
-                <Route exact path="/home" element={<Home/>} />
-                <Route exact path="/tasks" element={<Tasks/>}/>
+                  <Route exact path='/' element={<PublicRoute/>}>
+                      <Route exact path='/' element={<LoginRegister/>}/>
+                  </Route>
+                  <Route exact path='/home' element={<PrivateRoute/>}>
+                      <Route exact path='/home' element={<Home/>}/>
+                  </Route>
+                  <Route exact path='/tasks' element={<PrivateRoute/>}>
+                      <Route exact path='/tasks' element={<Tasks/>}/>
+                  </Route>
               </Routes>
 
             </div>
