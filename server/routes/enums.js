@@ -14,7 +14,9 @@ const USER_ROUTE_ENUMS={
     USERDATA:"/userdata",
     SUBTASKS:"/subtasks",
     TASKS:"/tasks",
-    LISTS:"/lists"
+    LISTS:"/lists",
+    TASK:"/task/:id",
+    LIST:"/list/:id"
 }
 
 

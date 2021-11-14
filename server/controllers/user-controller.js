@@ -280,7 +280,7 @@ const getTasks = async (req,res)=>{
     try{
         const user_data =await collection.findOne({ uuid: req.userData.uuid });
 
-        data = await taskCollection.find( { user_id : user_data._id}).toArray();
+        data = await taskCollection.find( { user_id : user_data._id}).sort( { _id: -1 } ).toArray();
 
     }
     catch (e){
@@ -296,7 +296,7 @@ const getLists = async (req,res)=>{
     try{
         const user_data =await collection.findOne({ uuid: req.userData.uuid });
 
-        data = await listCollection.find( { user_id : user_data._id}).toArray();
+        data = await listCollection.find( { user_id : user_data._id}).sort( { _id: -1 } ).toArray();
 
     }
     catch (e){
@@ -305,6 +305,44 @@ const getLists = async (req,res)=>{
 
     return res.status(200).json(data);
 }
+
+const getTasksId = async (req,res)=>{
+
+    const {id}= req.params
+    let task_data;
+    try{
+        const user_data =await collection.findOne({ uuid: req.userData.uuid });
+         task_data = await taskCollection.findOne({_id: new ObjectID(id),user_id:user_data._id});
+        if(task_data === null) {
+            return res.status(422).json({message: "Invalid task_id!", status: "NOK"});
+        }
+
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json(task_data)
+}
+
+
+const getListId = async (req,res)=>{
+
+    const {id}= req.params
+    let list_data;
+    try{
+        const user_data =await collection.findOne({ uuid: req.userData.uuid });
+         list_data = await listCollection.findOne({_id: new ObjectID(id),user_id:user_data._id});
+        if(list_data === null) {
+            return res.status(422).json({message: "Invalid list_id!", status: "NOK"});
+        }
+
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json(list_data)
+}
+
 
 module.exports = {
     register,
@@ -321,6 +359,8 @@ module.exports = {
     getUserData,
     getSubtasks,
     getTasks,
-    getLists
+    getLists,
+    getTasksId,
+    getListId
 
 }
