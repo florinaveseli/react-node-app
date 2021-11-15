@@ -7,7 +7,7 @@ const checkAuth = require("../middlewares/check-auth");
 const {register,login,updateUserData,createTask,editTask,completeTask,
        deleteTask,createSubTask,createList,editList,deleteList,
        getUserData,getSubtasks,getTasks,getLists,getTasksId,
-       getListId}
+       getListId,deleteSubTask,updateSubTask,subtaskId}
     = require('../controllers/user-controller');
 
 const {registerUserValidator} = require('../validators/user-validator');
@@ -27,7 +27,8 @@ router.post(USER_ROUTE_ENUMS.CREATE_SUBTASK,createSubTask);
 router.post(USER_ROUTE_ENUMS.CREATE_LIST,createList);
 router.post(USER_ROUTE_ENUMS.EDIT_LIST,editList);
 router.post(USER_ROUTE_ENUMS.DELETE_LIST,deleteList);
-
+router.post(USER_ROUTE_ENUMS.DELETE_SUBTASK,deleteSubTask);
+router.post(USER_ROUTE_ENUMS.UPDATE_SUBTASK,updateSubTask);
 
 router.get(USER_ROUTE_ENUMS.USERDATA,getUserData);
 router.get(USER_ROUTE_ENUMS.SUBTASKS,getSubtasks);
@@ -35,6 +36,8 @@ router.get(USER_ROUTE_ENUMS.TASKS,getTasks);
 router.get(USER_ROUTE_ENUMS.LISTS,getLists);
 router.get(USER_ROUTE_ENUMS.TASK,getTasksId);
 router.get(USER_ROUTE_ENUMS.LIST,getListId);
+router.get(USER_ROUTE_ENUMS.SUBTASK,subtaskId);
+
 
 module.exports =router;
 

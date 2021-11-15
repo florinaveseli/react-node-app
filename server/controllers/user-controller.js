@@ -263,7 +263,7 @@ const getUserData = async (req,res) =>{
 
 
 const getSubtasks = async (req,res)=>{
-    const{task_id} = req.body;
+    const{task_id} = req.params;
     let data;
     try{
         const user_data =await collection.findOne({ uuid: req.userData.uuid });
@@ -271,7 +271,7 @@ const getSubtasks = async (req,res)=>{
         if(task_data === null) {
             return res.status(422).json({message: "Invalid task_id!", status: "NOK"});
         }
-         data = await subTask.find( { task_id : new ObjectID(task_id),state:3}).toArray();
+         data = await subTask.find( { task_id : new ObjectID(task_id),state:3}).sort( { _id: -1 } ).toArray();
 
     }
     catch (e){
@@ -294,8 +294,12 @@ const getTasks = async (req,res)=>{
     catch (e){
         return res.status(400).json({message: "Something went wrong!", status: "NOK"});
     }
+    const result = data.completed;
+    if(result ===1){
+        return res.status(200).json({data,completed:true});
+    }
+    return res.status(200).json({data,completed:false});
 
-    return res.status(200).json(data);
 }
 
 const getLists = async (req,res)=>{
@@ -371,6 +375,60 @@ const getListId = async (req,res)=>{
 }
 
 
+const deleteSubTask = async (req,res)=>{
+    const {subtask_id}= req.body
+    try{
+
+        const task_data = await subTask.findOne({_id: new ObjectID(subtask_id),state:3});
+        if(task_data === null) {
+            return res.status(422).json({message: "Invalid subtask_id!", status: "NOK"});
+        }
+        await subTask.updateOne({_id: new ObjectID(subtask_id)},{$set:{state:5}});
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json({message:"Successfully inserted",status:"OK"})
+}
+
+
+const updateSubTask = async (req,res)=>{
+    const {description,title,due_date,subtask_id}= req.body
+    try{
+
+        const task_data = await subTask.findOne({_id: new ObjectID(subtask_id)});
+        if(task_data === null) {
+            return res.status(422).json({message: "Invalid subtask_id!", status: "NOK"});
+        }
+        await subTask.updateOne({_id: new ObjectID(subtask_id)},{$set:{description,title,due_date}});
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json({message:"Successfully inserted",status:"OK"})
+}
+
+
+const subtaskId = async (req,res)=>{
+    const {id}= req.params;
+    let task_data,res_date;
+    try {
+
+         task_data = await subTask.findOne({_id: new ObjectID(id),state:3});
+        if(task_data === null) {
+            return res.status(422).json({message: "Invalid Task_id!", status: "NOK"});
+        }
+        const date = new Date(task_data.due_date);
+        const dm= date.getMonth()     // 11
+        const dd= date.getDate()      // 29
+        const dy = date.getFullYear()  // 2011
+        res_date = Date.parse(dm+"/"+dd+"/"+dy);
+    }
+    catch (e) {
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json({task_data,res_date})
+}
 
 
 module.exports = {
@@ -390,6 +448,9 @@ module.exports = {
     getTasks,
     getLists,
     getTasksId,
-    getListId
+    getListId,
+    deleteSubTask,
+    updateSubTask,
+    subtaskId
 
 }

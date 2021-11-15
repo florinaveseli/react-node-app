@@ -12,11 +12,14 @@ const USER_ROUTE_ENUMS={
     EDIT_LIST :"/edit-list",
     DELETE_LIST :"/delete-list",
     USERDATA:"/userdata",
-    SUBTASKS:"/subtasks",
+    SUBTASKS:"/subtasks/:task_id",
     TASKS:"/tasks",
     LISTS:"/lists",
     TASK:"/task/:id",
-    LIST:"/list/:id"
+    LIST:"/list/:id",
+    DELETE_SUBTASK:"/delete-subtask",
+    UPDATE_SUBTASK:"/update-subtask",
+    SUBTASK:"/subtask/:id",
 }
 
 
