@@ -22,10 +22,10 @@ function App() {
                 <Navbar bg="dark" variant="dark" className="nav-content">
                     <Container>
                         <Nav className="me-auto">
-                            <Nav.Link >   <NavLink    to="/">SignIn</NavLink></Nav.Link>
-                            <Nav.Link > <NavLink  to="/home">Home</NavLink></Nav.Link>
-                            <Nav.Link ><NavLink to="/tasks">Tasks</NavLink></Nav.Link>
-                            <Nav.Link ><NavLink  to="/lists">Lists</NavLink></Nav.Link>
+                             <NavLink    to="/">SignIn</NavLink>
+                             <NavLink  to="/home">Home</NavLink>
+                            <NavLink to="/tasks">Tasks</NavLink>
+                            <NavLink  to="/lists">Lists</NavLink>
                         </Nav>
                     </Container>
                 </Navbar>
