@@ -112,7 +112,7 @@ const LoginRegister  =()=>{
             :
             <div  className="inner">
                 <form>
-                    <h3>Log in</h3>
+                    <h3>Register</h3>
 
                     <div className="form-group">
                         <label>Email</label>
