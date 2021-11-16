@@ -177,7 +177,7 @@ const Lists  = () =>{
 
                     {lists.map((el,user) => (
 
-                        <li className="user" key={user}><span className="task-txt">{el.name} </span><span> {el.description}</span><Button  onClick={(e) => { showModal();getList(el); }}    className="btn btn-dark btn-lg btn-block space-btn-task">...</Button><Button  className="btn btn-danger btn-lg btn-block space-btn-task"  onClick={()=>handleDelete(el)} >X</Button></li>
+                        <li className="user task-txt" key={user}><span >{el.name} </span><span> {el.description}</span><Button  onClick={(e) => { showModal();getList(el); }}    className="btn btn-dark btn-lg btn-block space-btn-task">...</Button><Button  className="btn btn-danger btn-lg btn-block space-btn-task"  onClick={()=>handleDelete(el)} >X</Button></li>
                     ))}
                 </ul>
             </div>
