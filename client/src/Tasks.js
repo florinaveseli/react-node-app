@@ -4,10 +4,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import axios from "axios";
-// import Modal from  "./Modals/Modal"
 import {Button,Modal,Form}  from 'react-bootstrap';
 
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+
 
 const Tasks  =()=>{
     const [title, setTitle] = useState('');
@@ -23,7 +26,7 @@ const Tasks  =()=>{
     const [taskDescriptionId,getTaskDescriptionId] =useState('');
     const [taskDateId,getTaskDateId] =useState('');
     const [taskListId,getTaskListId] =useState({});
-    const [complete,setComplete]= useState(false);
+
 
     const [showST,setShowST]= useState(false);
     const [subTasks,setSubtasks] = useState([]);
@@ -47,30 +50,15 @@ const Tasks  =()=>{
             }
         };
 
-        axios(config).then(res=>{
-            const data = res.data.data;
+        const getData = async () => {
+            const {data: {data}} = await axios(config);
+            const checkboxes = data.map(item => ({...item, value: item._id, completed: item.completed === 1}))
+            setTasks(checkboxes)
 
-            const isCompleted = res.data;
-            const mapCom = data.map(d=>{
-                if(d.completed ===1){
-                    return true;
-                }
-                else{
-                    return false
-                }
-            })
-            console.log(mapCom)
+        }
 
-            const options = data.map(d => ({"value" : d._id, "title" : d.title,"completed":mapCom,"description":d.description}))
-             setTasks(options)
-            console.log(data,"sd")
+        getData();
 
-
-
-
-        }).catch(e=>{
-            console.log(e)
-        })
         const configList = {
             method: 'get',
             url: 'http://localhost:8000/api/user/lists',
@@ -208,12 +196,7 @@ const Tasks  =()=>{
             console.log(e,"eee")
         })
     }
-    const handleChangeId =(e)=>{
-        getTaskListId(e.value);
-    }
-    const checkTask =()=>{
 
-    }
     const handleCheck =(e) =>{
 
 
@@ -243,13 +226,13 @@ const Tasks  =()=>{
             data
         };
 
-let res;
+// let res;
         axios(config).then(res=>{
 
             res =[...tasks].map(todo=>{
                 if(todo.value === e.value){
 
-                    if(res.data.completed == 1){
+                    if(res.data.completed === 1){
 
                         todo.completed = true;
                     }
@@ -259,10 +242,64 @@ let res;
                 }
                 return todo
             })
-            console.log(res)
+
             setTasks(res);
 
              //window.location.reload(false);
+
+        }).catch(e=>{
+            console.log(e,"eee")
+        })
+
+    }
+
+
+    const handleCompleteSubtask =(e) =>{
+
+
+        let com ;
+
+        if(!e.completed){
+            console.log(!e.completed,"test")
+            com =1;
+        }
+        else{
+            com =0;
+        }
+
+        const data = {
+            "subtask_id": e.value,
+            "completed":com
+        };
+
+
+        const config = {
+            method: 'post',
+            url: 'http://localhost:8000/api/user/complete-subtask',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`
+            },
+            data
+        };
+
+
+        axios(config).then(res=>{
+
+            res =[...subTasks].map(todo=>{
+                if(todo.value === e.value){
+
+                    if(res.data.completed === 1){
+
+                        todo.completed = true;
+                    }
+                    else {
+                        todo.completed = false;
+                    }
+                }
+                return todo
+            })
+            setSubtasks(res);
+
 
         }).catch(e=>{
             console.log(e,"eee")
@@ -311,7 +348,8 @@ let res;
         axios(configList).then(res=>{
             const data = res.data;
 
-            const options = data.map(d => ({"value" : d._id, "title" : d.title,"description":d.description}))
+            const options = data.map(d => ({"value" : d._id, "title" : d.title,"description":d.description, completed: d.completed === 1}))
+
             setSubtasks(options)
 
 
@@ -438,7 +476,7 @@ let res;
         })
     }
     return(
-        <div>
+        <div className="inner-home">
             <div>
                 <h4>Create Task</h4>
             </div>
@@ -460,7 +498,7 @@ let res;
                     <Form.Label>Select List</Form.Label>
                     <Select options={list} onChange={handleChange} />
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={createTask}>
+                <Button className="btn btn-dark btn-lg btn-block " type="submit" onClick={createTask}>
                     Submit
                 </Button>
             </Form>
@@ -472,7 +510,7 @@ let res;
 
                 {tasks.map((el,user) => (
 
-                    <li className="user" key={user}><input name="cb" type="checkbox" checked={el.completed}  onChange={()=>handleCheck(el)} /><span>{el.title} </span><span> {el.description}</span><Button    onClick={(e) => { showModal(); getTask(el); subtasks(el)}}   variant="primary">...</Button> <Button variant="danger" onClick={()=>handleDelete(el)}>X</Button></li>
+                    <li className="user task-txt" key={user}><input name="cb" type="checkbox" checked={el.completed}  onChange={()=>handleCheck(el)} /><span >{el.title} </span><span > {el.description}</span><Button    onClick={(e) => { showModal(); getTask(el); subtasks(el)}}   className="btn btn-dark btn-lg btn-block space-btn-task">...</Button> <Button className="btn btn-danger btn-lg btn-block " onClick={()=>handleDelete(el)}>X</Button></li>
                 ))}
                 </ul>
             </div>
@@ -503,13 +541,13 @@ let res;
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="primary" onClick = {showModalST}>
+                    <Button className="btn btn-dark btn-lg btn-block " onClick = {showModalST}>
                         Subtask
                     </Button>
-                    <Button variant="secondary" onClick={hideModal}>
+                    <Button  className="btn btn-secondary btn-lg btn-block " onClick={hideModal}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={updateTasks}>
+                    <Button className="btn btn-danger btn-lg btn-block " onClick={updateTasks}>
                         Save Changes
                     </Button>
 
@@ -520,7 +558,7 @@ let res;
 
                         {subTasks.map((el,user) => (
 
-                            <li className="user" key={user}><input name="cb" type="checkbox" checked={el.completed}  onChange={()=>handleCheck(el)} /><span>{el.title} </span><span> {el.description}</span><Button    onClick={(e) => { showModalSTU(); getSubtask(el);}}   variant="primary">...</Button> <Button variant="danger" onClick={()=>handleDeleteSubtask(el)}>X</Button></li>
+                            <li className="user" key={user}><input name="cb" type="checkbox" checked={el.completed}  onChange={()=>handleCompleteSubtask(el)} /><span>{el.title} </span><span> {el.description}</span><Button    onClick={(e) => { showModalSTU(); getSubtask(el);}}  className="btn btn-dark btn-lg btn-block " >...</Button> <Button  className="btn btn-danger btn-lg btn-block " onClick={()=>handleDeleteSubtask(el)}>X</Button></li>
                         ))}
                     </ul>
                 </div>
@@ -549,10 +587,10 @@ let res;
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={hideModalST}>
+                    <Button className="btn btn-secondary btn-lg btn-block " onClick={hideModalST}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={createSubtasks}>
+                    <Button className="btn btn-dark btn-lg btn-block " onClick={createSubtasks}>
                         Create
                     </Button>
 
@@ -581,10 +619,10 @@ let res;
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={hideModalSTU}>
+                    <Button  className="btn btn-secondary btn-lg btn-block " onClick={hideModalSTU}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={updateSubtasks}>
+                    <Button className="btn btn-dark btn-lg btn-block " onClick={updateSubtasks}>
                         Update
                     </Button>
 

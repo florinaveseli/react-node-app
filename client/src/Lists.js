@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {getToken, removeUserSession} from "./Utils/SetToken";
+
+import {getToken} from "./Utils/SetToken";
 import axios from "axios";
 import {Button, Form, Modal} from "react-bootstrap";
-import DatePicker from "react-datepicker";
-import Select from "react-select";
 
 
 const Lists  = () =>{
@@ -17,7 +15,6 @@ const Lists  = () =>{
     const [listDescription,setListDescription] = useState('');
     const [listId,setListId] = useState('');
 
-    // const [email,setEmail]= useState('');
 
 
     useEffect(() => {
@@ -156,7 +153,7 @@ const Lists  = () =>{
     }
 
     return(
-        <div>
+        <div className="inner-home">
             <div>
                <h4>Create List</h4>
             </div>
@@ -170,7 +167,7 @@ const Lists  = () =>{
                     <Form.Label>Description</Form.Label>
                     <Form.Control type="text" value={description}  onChange={e=>{setDescription(e.target.value)}}/>
                 </Form.Group>
-                <Button variant="primary" type="submit" onClick={createList}>
+                <Button className="btn btn-dark btn-lg btn-block " type="submit" onClick={createList}>
                     Submit
                 </Button>
             </Form>
@@ -180,10 +177,11 @@ const Lists  = () =>{
 
                     {lists.map((el,user) => (
 
-                        <li className="user" key={user}><span>{el.name} </span><span> {el.description}</span><Button  onClick={(e) => { showModal();getList(el); }}     variant="primary">...</Button><Button variant="danger" onClick={()=>handleDelete(el)} >X</Button></li>
+                        <li className="user" key={user}><span className="task-txt">{el.name} </span><span> {el.description}</span><Button  onClick={(e) => { showModal();getList(el); }}    className="btn btn-dark btn-lg btn-block space-btn-task">...</Button><Button  className="btn btn-danger btn-lg btn-block space-btn-task"  onClick={()=>handleDelete(el)} >X</Button></li>
                     ))}
                 </ul>
             </div>
+
             <Modal show={show} onHide={hideModal}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit List</Modal.Title>
@@ -202,10 +200,10 @@ const Lists  = () =>{
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={hideModal}>
+                    <Button   className="btn btn-secondary btn-lg btn-block "  onClick={hideModal}>
                         Close
                     </Button>
-                    <Button variant="primary"  onClick={editList}>
+                    <Button  className="btn btn-dark btn-lg btn-block "   onClick={editList}>
                         Save Changes
                     </Button>
                 </Modal.Footer>

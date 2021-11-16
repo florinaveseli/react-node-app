@@ -68,26 +68,26 @@ const Home  =()=>{
 
 
     return(
-        <div>
-            <div>
-                <p>Name:</p>
-                <input type="text" value={name}  onChange={e=>setName(e.target.value)}/>
-            </div>
-            <br/>
-            <div>
-                <p>Surname:</p>
-                <input type="text"  value={surname}  onChange={e=>setSurname(e.target.value)} />
-            </div>
-            <br/>
-            {/*<div>*/}
-            {/*    <p>Email:</p>*/}
-            {/*   <input type="text"  value=email />*/}
-            {/*</div>*/}
-            <br/>
-            <div>
-            <input type="button"  value="UpdateData" onClick={updateData}/>
-            <input type="button" value="Logout" onClick={handleLogout}/>
-            </div>
+        <div className="inner-home">
+
+            <form>
+                <h3>Update your data</h3>
+
+                <div className="form-group">
+                    <label>Name</label>
+                    <input type="text" className="form-control" value={name}  onChange={e=>setName(e.target.value)}/>
+                </div>
+
+                <div className="form-group">
+                    <label>Surname</label>
+                    <input type="text" className="form-control"  value={surname}  onChange={e=>setSurname(e.target.value)}  />
+                </div>
+
+
+                <button   className="btn btn-dark btn-lg btn-block " onClick={updateData}>Update Data</button>
+                <button className="btn btn-dark btn-lg btn-block space-btn"  onClick={handleLogout}>Logout</button>
+            </form>
+
         </div>
     )
 }

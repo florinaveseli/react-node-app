@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter ,Routes,Route,NavLink,Link} from "react-router-dom";
+import {BrowserRouter ,Routes,Route,NavLink} from "react-router-dom";
 
 
 import LoginRegister from "./LoginRegister";
@@ -9,18 +9,27 @@ import  Lists from "./Lists";
 import PublicRoute from "./Routes/PublicRoute";
 import PrivateRoute from "./Routes/PrivateRoute";
 
+import {Navbar,Nav,Container}  from 'react-bootstrap';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
     <BrowserRouter>
         <div className="App">
 
-            <div className="header">
-              <NavLink   style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/">SignIn</NavLink>
-              <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/home">Home</NavLink>
-              <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/tasks">Tasks</NavLink>
-              <NavLink style={({ isActive }) => ({ color: isActive ? "green" : "blue" })} to="/lists">Lists</NavLink>
-            </div>
+                <Navbar bg="dark" variant="dark" className="nav-content">
+                    <Container>
+                        <Nav className="me-auto">
+                            <Nav.Link >   <NavLink    to="/">SignIn</NavLink></Nav.Link>
+                            <Nav.Link > <NavLink  to="/home">Home</NavLink></Nav.Link>
+                            <Nav.Link ><NavLink to="/tasks">Tasks</NavLink></Nav.Link>
+                            <Nav.Link ><NavLink  to="/lists">Lists</NavLink></Nav.Link>
+                        </Nav>
+                    </Container>
+                </Navbar>
+
             <div className="content">
               <Routes>
                   <Route exact path='/' element={<PublicRoute/>}>

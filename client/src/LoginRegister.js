@@ -89,48 +89,53 @@ const LoginRegister  =()=>{
     }
     return(
         login ?
-            <div className="login">
-             <h4>Login</h4>
-             <div>
-                 <p>Email</p>
-                 <input type="text" value={username} onChange={e=>setUsername(e.target.value)}/>
-             </div>
-             <div>
-                 <p>Password</p>
-                 <input type="password" value={password} onChange={e=>setPassword(e.target.value)}/>
-             </div>
-                <br/>
+            <div className="inner">
+                <form>
+                <h3>Log in</h3>
+
+                <div className="form-group">
+                    <label>Email</label>
+                    <input type="email" className="form-control" value={username} onChange={e=>setUsername(e.target.value)}/>
+                </div>
+
+                <div className="form-group">
+                    <label>Password</label>
+                    <input type="password" className="form-control" value={password} onChange={e=>setPassword(e.target.value)} />
+                </div>
+
                 {error && <div className="error">{error}</div>}
-                <input type="button" value={loading?"Loading...":"Login"} disabled={loading} onClick={handleLogin}/>
-                <br/>
-                <br/>
-                <input type="button" value="Register" onClick={()=>{setLogin(false)}}/>
+
+                <button   className="btn btn-dark btn-lg btn-block " value={loading?"Loading...":"Login"} disabled={loading} onClick={handleLogin}>Login</button>
+                <button className="btn btn-dark btn-lg btn-block space-btn"  onClick={()=>{setLogin(false)}}>Register</button>
+                </form>
             </div>
             :
-            <div className="register">
-                <h4>Register</h4>
-                <div>
-                    <p>Email</p>
-                    <input type="text" value={email} onChange={e=>{setEmail(e.target.value)}}/>
-                </div>
-                <div>
-                    <p>Password</p>
-                    <input type="password" value={rPassword} onChange={e=>{setRPassword(e.target.value)}}/>
-                </div>
-                <div>
-                    <p>Name</p>
-                    <input type="text" value={name} onChange={e=>{setName(e.target.value)}}/>
-                </div>
-                <div>
-                    <p>Surname</p>
-                    <input type="text" value={surname} onChange={e=>{setSurname(e.target.value)}}/>
-                </div>
-                <br/>
-                {error && <div className="error">{error}</div>}
-                <input type="button" value={loading?"Loading...":"Register"} disabled={loading} onClick={handleRegister} />
-                <br/>
-                <br/>
-                <input type="button" value="Login" onClick={handleChangeLog}/>
+            <div  className="inner">
+                <form>
+                    <h3>Log in</h3>
+
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input type="email" className="form-control" value={email} onChange={e=>{setEmail(e.target.value)}}/>
+                    </div>
+
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input type="password" className="form-control" value={rPassword} onChange={e=>{setRPassword(e.target.value)}} />
+                    </div>
+                    <div className="form-group">
+                        <label>Name</label>
+                        <input type="text" className="form-control" value={name} onChange={e=>{setName(e.target.value)}} />
+                    </div>
+                    <div className="form-group">
+                        <label>Surname</label>
+                        <input type="text" className="form-control" value={surname} onChange={e=>{setSurname(e.target.value)}} />
+                    </div>
+
+                    {error && <div className="error">{error}</div>}
+                    <button className="btn btn-dark btn-lg btn-block"  value={loading?"Loading...":"Register"} disabled={loading} onClick={handleRegister}>Register</button>
+                    <button   className="btn btn-dark btn-lg btn-block space-btn" onClick={handleChangeLog}>Login</button>
+                </form>
             </div>
 
 

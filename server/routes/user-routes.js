@@ -7,7 +7,7 @@ const checkAuth = require("../middlewares/check-auth");
 const {register,login,updateUserData,createTask,editTask,completeTask,
        deleteTask,createSubTask,createList,editList,deleteList,
        getUserData,getSubtasks,getTasks,getLists,getTasksId,
-       getListId,deleteSubTask,updateSubTask,subtaskId}
+       getListId,deleteSubTask,updateSubTask,subtaskId,completeSubtask}
     = require('../controllers/user-controller');
 
 const {registerUserValidator} = require('../validators/user-validator');
@@ -29,6 +29,9 @@ router.post(USER_ROUTE_ENUMS.EDIT_LIST,editList);
 router.post(USER_ROUTE_ENUMS.DELETE_LIST,deleteList);
 router.post(USER_ROUTE_ENUMS.DELETE_SUBTASK,deleteSubTask);
 router.post(USER_ROUTE_ENUMS.UPDATE_SUBTASK,updateSubTask);
+router.post(USER_ROUTE_ENUMS.COMPLETE_SUBTASK,completeSubtask);
+
+
 
 router.get(USER_ROUTE_ENUMS.USERDATA,getUserData);
 router.get(USER_ROUTE_ENUMS.SUBTASKS,getSubtasks);

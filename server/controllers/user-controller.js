@@ -431,6 +431,24 @@ const subtaskId = async (req,res)=>{
 }
 
 
+const completeSubtask = async (req,res)=>{
+
+    const {subtask_id,completed}= req.body
+    try{
+        const task_data = await subTask.findOne({_id: new ObjectID(subtask_id)});
+        if(task_data === null) {
+            return res.status(422).json({message: "Invalid subtask_id!", status: "NOK"});
+        }
+        await subTask.updateOne({_id: new ObjectID(subtask_id)},{$set:{completed:completed}});
+    }
+    catch (e){
+        return res.status(400).json({message: "Something went wrong!", status: "NOK"});
+    }
+    return res.status(200).json({message:"Successfully inserted",status:"OK",completed})
+}
+
+
+
 module.exports = {
     register,
     login,
@@ -451,6 +469,7 @@ module.exports = {
     getListId,
     deleteSubTask,
     updateSubTask,
-    subtaskId
+    subtaskId,
+    completeSubtask
 
 }

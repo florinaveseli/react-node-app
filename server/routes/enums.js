@@ -20,6 +20,7 @@ const USER_ROUTE_ENUMS={
     DELETE_SUBTASK:"/delete-subtask",
     UPDATE_SUBTASK:"/update-subtask",
     SUBTASK:"/subtask/:id",
+    COMPLETE_SUBTASK:"/complete-subtask"
 }
 
 

@@ -19,19 +19,20 @@ code {
   border-bottom: 1px solid silver;
 }
 
-.header a{
-  color: #4d678a;
+.nav-content a{
+  color: white;
   text-decoration: none;
   margin-left: 20px;
   margin-right: 5px;
+  font-size: 25px;
 }
 
-.header a:hover{
-  color: #9abbe7;
+.nav-content a:hover{
+  color: #72777e;
 }
 
-.header .active{
-  color: #604a88;
+.nav-content .active{
+  color: #4a494d;
 }
 
 .content{
@@ -41,4 +42,37 @@ code {
 .error{
   color: red;
   margin-bottom: 10px;
+}
+
+.inner {
+  width: 450px;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all .3s;
+}
+.space-btn{
+  margin: 20px;
+}
+
+.inner-home{
+  width: 650px;
+  margin: auto;
+  background: #ffffff;
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all .3s;
+}
+
+.task-txt{
+  font-size: 23px;
+
+}
+
+.space-btn-task{
+  margin: 30px;
+
 }
